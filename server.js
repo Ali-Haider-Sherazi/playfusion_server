@@ -350,7 +350,6 @@ app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
     // Respond with the updated arena
     res.status(200).json({
       success: true,
-      message: 'Arena updated successfully',
       updatedArena,
     });
   } catch (error) {
@@ -382,7 +381,6 @@ app.patch('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
     // Respond with the updated arena
     res.status(200).json({
       success: true,
-      message: 'Arena images updated successfully',
       updatedArena,
     });
   } catch (error) {
