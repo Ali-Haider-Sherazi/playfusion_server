@@ -332,7 +332,7 @@ app.get('/api/playfusion/arenas', async (req, res) => {
 
 
 // Update Arena
-app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
+app.put('/api/playfusion/updateArena/:arenaId', async (req, res) => {
   try {
     const { arenaId } = req.params;
     let newid = arenaId;
@@ -364,7 +364,7 @@ app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
 
 
 // Update Arena Images
-app.patch('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
+app.put('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
   try {
     const { arenaId } = req.params;
     let newid = arenaId;

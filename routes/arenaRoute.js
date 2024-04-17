@@ -35,8 +35,7 @@ router.delete("/deleteMatchFind/:Id", delMatchFindController);
 router.put("/updateProduct/:productId", updateProductController);
 router.put("/updateMatchFind/:matchId", updateMatchFindController);
 router.put("/updatePreference/:Id", updatePreferenceController);
-router.put("/updateArena/:arenaId", updateArenaController);	
-router.patch("/updateArena/:arenaId", updateArenaController);
+router.put("/updateArena/:arenaId", updateArenaController);
 //export
 module.exports = router;
 
