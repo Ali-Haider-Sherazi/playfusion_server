@@ -334,6 +334,7 @@ app.get('/api/playfusion/arenas', async (req, res) => {
 // Update Arena
 app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
   try {
+    console.log('You are going to hit it...')
     const { arenaId } = req.params;
     let newid = arenaId;
     newid = new ObjectId(newid);
@@ -353,6 +354,7 @@ app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
       updatedArena,
     });
   } catch (error) {
+    
     console.error('Error updating arena:', error);
     res.status(500).json({
       success: false,
