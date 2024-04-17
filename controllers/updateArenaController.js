@@ -16,7 +16,7 @@ const updateArenaController = async (req, res) => {
       });
     }
     
-    log("arenaId is ",arenaId);
+    // log("arenaId is ",arenaId);
 
     // Update the arena details
 
@@ -43,7 +43,7 @@ const updateArenaController = async (req, res) => {
       updatedArena: updatedArena,
     });
   } catch (error) {
-    console.log(error.response.data);
+    // console.log(error.response.data);
     return res.status(500).send({
       success: false,
       message: "Error in Update Arena API",
