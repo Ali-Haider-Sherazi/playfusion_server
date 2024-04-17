@@ -372,7 +372,7 @@ app.put('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
     const updatedData = req.body;
 
     // Find the arena by ID and update it
-    const updatedArena = await Arena.findByIdAndUpdate({ _id: newid }, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+    const updatedArena = await Arena.findByIdAndUpdate(newid, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
 
     // If no arena is found with the provided ID, respond with a 404 status
     if (!updatedArena) {
