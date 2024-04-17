@@ -166,6 +166,27 @@ app.get('/api/playfusion/all/:arenaID', async (req, res) => {
 });
 
 
+//get all arenas under a specific user id 
+app.get('/api/playfusion/userArenas/:userID', async (req, res) => {
+  try {
+    const { userID } = req.params;
+
+    // Find all arenas with vendorId equal to userID
+    const arenas = await Arena.find({ vendorId: userID });
+
+    // If no arenas are found, respond with a 404 status
+    if (!arenas || arenas.length === 0) {
+      return res.status(404).json({ error: 'No arenas found for this user' });
+    }
+
+    // Respond with the found arenas
+    res.status(200).json({ success: true, data: arenas });
+  } catch (error) {
+    console.error('Error fetching arenas by vendorId:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 //To show Booking slot available or not
 app.get('/api/playfusion/slots', async (req, res) => {
@@ -307,6 +328,156 @@ app.get('/api/playfusion/arenas', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+// Update Arena
+app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
+  try {
+    const { arenaId } = req.params;
+    let newid = arenaId;
+    newid = new ObjectId(newid);
+    const updatedData = req.body;
+
+    // Find the arena by ID and update it
+    const updatedArena = await Arena.findByIdAndUpdate({ _id: newid }, {courts: req.body.courts, isActive: req.body.isActive, price: req.body.price, sports: req.body.sports, ameneties: req.body.facilites,description: req.body.description, address: req.body.address, city:req.body.location,vendorId: req.body.ownerID, name: req.body.title ,titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+
+    // If no arena is found with the provided ID, respond with a 404 status
+    if (!updatedArena) {
+      return res.status(404).json({ error: 'Arena not found' });
+    }
+
+    // Respond with the updated arena
+    res.status(200).json({
+      success: true,
+      message: 'Arena updated successfully',
+      updatedArena,
+    });
+  } catch (error) {
+    console.error('Error updating arena:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+});
+
+
+// Update Arena Images
+app.patch('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
+  try {
+    const { arenaId } = req.params;
+    let newid = arenaId;
+    newid = new ObjectId(newid);
+    const updatedData = req.body;
+
+    // Find the arena by ID and update it
+    const updatedArena = await Arena.findByIdAndUpdate({ _id: newid }, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+
+    // If no arena is found with the provided ID, respond with a 404 status
+    if (!updatedArena) {
+      return res.status(404).json({ error: 'Arena not found' });
+    }
+
+    // Respond with the updated arena
+    res.status(200).json({
+      success: true,
+      message: 'Arena images updated successfully',
+      updatedArena,
+    });
+  } catch (error) {
+    console.error('Error updating arena:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+});
+
+//Check Booking Status for Reviews
+app.get('/api/playfusion/checkBookingStatus/:arenaId/:userId', async (req, res) => {
+  try {
+    const { arenaId, userId } = req.params;
+
+    // Find a booking with the provided arenaId, userId, and status="completed"
+    const booking = await BookingDetail.findOne({
+      arenaID: arenaId,
+      userID: userId,
+      status: 'completed'
+    });
+
+    if (booking) {
+      return res.status(200).json({ success: true, message: 'Completed Booking Exists' });
+    } else {
+      return res.status(404).json({ success: false, message: 'Booking not found or not completed' });
+    }
+  } catch (error) {
+    console.error('Error checking booking status:', error);
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
+// Add Review
+app.post('/api/playfusion/addReview/:arenaId', async (req, res) => {
+  try {
+    const { arenaId } = req.params;
+    const { rating, comment, username } = req.body;
+
+    // Find the arena by ID
+    const arena = await Arena.findById(arenaId);
+
+    // If the arena is not found, return a 404 status
+    if (!arena) {
+      return res.status(404).json({ error: 'Arena not found' });
+    }
+
+    // Add the review to the arena's reviews array
+    arena.reviews.push({
+      rating,
+      comment,
+      username
+    });
+
+    // Save the updated arena
+    await arena.save();
+
+    // Respond with a success message
+    res.status(201).json({ success: true, message: 'Review added successfully' });
+  } catch (error) {
+    console.error('Error adding review:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch all pending bookings
+app.get('/api/playfusion/pendingBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="pending"
+    const pendingBookings = await BookingDetail.find({ status: 'pending' });
+
+    // Respond with the pending bookings
+    res.json(pendingBookings);
+  } catch (error) {
+    console.error('Error fetching pending bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch all active bookings
+app.get('/api/playfusion/activeBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="active"
+    const activeBookings = await BookingDetail.find({ status: 'active' });
+
+    // Respond with the active bookings
+    res.json(activeBookings);
+  } catch (error) {
+    console.error('Error fetching active bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 

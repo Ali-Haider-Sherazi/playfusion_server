@@ -1,5 +1,6 @@
 const express = require("express");
 const { addArenaController } = require("../controllers/arenaController");
+const {updateArenaController} = require("../controllers/updateArenaController");
 const {bookingController} = require("../controllers/bookingController");
 const {addProductController} = require("../controllers/productController");
 const {delproductController} = require("../controllers/delproductController");
@@ -34,7 +35,8 @@ router.delete("/deleteMatchFind/:Id", delMatchFindController);
 router.put("/updateProduct/:productId", updateProductController);
 router.put("/updateMatchFind/:matchId", updateMatchFindController);
 router.put("/updatePreference/:Id", updatePreferenceController);
-
+router.put("/updateArena/:arenaId", updateArenaController);	
+router.patch("/updateArena/:arenaId", updateArenaController);
 //export
 module.exports = router;
 
