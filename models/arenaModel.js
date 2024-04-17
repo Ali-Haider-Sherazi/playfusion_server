@@ -57,7 +57,7 @@ const arenaSchema = new mongoose.Schema(
       required: [true, "Whats game play in the Arena"],
     },
     price: {
-      type: Number,
+      type: String,
       required: [true, "What is the hourly charge"],
     },
     reviews: {
