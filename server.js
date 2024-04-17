@@ -332,7 +332,7 @@ app.get('/api/playfusion/arenas', async (req, res) => {
 
 
 // Update Arena
-app.put('/api/playfusion/updateArena/:arenaId', async (req, res) => {
+app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
   try {
     const { arenaId } = req.params;
     let newid = arenaId;
@@ -340,7 +340,7 @@ app.put('/api/playfusion/updateArena/:arenaId', async (req, res) => {
     const updatedData = req.body;
 
     // Find the arena by ID and update it
-    const updatedArena = await Arena.findByIdAndUpdate(newid, {courts: req.body.courts, isActive: req.body.isActive, price: req.body.price, sports: req.body.sports, ameneties: req.body.facilites,description: req.body.description, address: req.body.address, city:req.body.location,vendorId: req.body.ownerID, name: req.body.title ,titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+    const updatedArena = await Arena.findByIdAndUpdate({ _id: newid }, {courts: req.body.courts, isActive: req.body.isActive, price: req.body.price, sports: req.body.sports, ameneties: req.body.facilites,description: req.body.description, address: req.body.address, city:req.body.location,vendorId: req.body.ownerID, name: req.body.title ,titleImage: req.body.titleImage, images: req.body.images}, { new: true });
     console.log('price at server is ',req.body.price)
     // If no arena is found with the provided ID, respond with a 404 status
     if (!updatedArena) {
@@ -364,7 +364,7 @@ app.put('/api/playfusion/updateArena/:arenaId', async (req, res) => {
 
 
 // Update Arena Images
-app.put('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
+app.patch('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
   try {
     const { arenaId } = req.params;
     let newid = arenaId;
@@ -372,7 +372,7 @@ app.put('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
     const updatedData = req.body;
 
     // Find the arena by ID and update it
-    const updatedArena = await Arena.findByIdAndUpdate(newid, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+    const updatedArena = await Arena.findByIdAndUpdate({ _id: newid }, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
 
     // If no arena is found with the provided ID, respond with a 404 status
     if (!updatedArena) {
