@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    price: {
+const findSchema = new mongoose.Schema({
+    players: {
         type: Number,
         required: true,
     },
-    description: {
+    arena: {
         type: String,
         required: true,
     },
-    condition: {
+    start: {
+        type: String,
+        required: true,
+    },
+    end: {
+        type: String,
+        required: true,
+    },
+    date: {
         type: String,
         required: true,
     },
@@ -25,20 +25,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    sellerId: {
+    userId: {
         type: String,
         required: true,
-    },
-    img: {
-        type: [String], // Assuming images are URLs stored as strings
-        required: true,
-    },
-    delist: {
-        type: Boolean,
-        default: false,
     },
     },
     { timestamps: true }
     );
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Find", findSchema);

@@ -11,6 +11,9 @@ const bodyParser = require('body-parser');
 const Arena = require("./models/arenaModel");
 const BookingDetail = require('./models/bookingModel');
 const Product = require("./models/productModel");
+const Find = require("./models/findplayerModel");
+const Preference = require("./models/preferenceModel");
+const Match = require("./models/matchFindModel");
 
 
 
@@ -220,44 +223,6 @@ app.get('/api/playfusion/slots/:userID/:status', async (req, res) => {
 
 
 
-
-//All Products
-app.get('/api/playfusion/allproduct', async (req, res) => {
-  try {
-    // Fetch all products
-    const allProduct = await Product.find({})
-
-    // Respond with all products
-    res.json(allProduct);
-  } catch (error) {
-    console.error('Error fetching all Arena:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-// Find Product by ID 
-app.get('/api/playfusion/product/:productId', async (req, res) => {
-  try {
-    const productId = req.params.productId;
-
-    // Fetch product by ID
-    const product = await Product.findById(productId);
-
-    // Check if product exists
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    // Respond with the product
-    res.json(product);
-  } catch (error) {
-    console.error('Error fetching product by ID:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
 // Endpoint to filter arenas
 // Endpoint to filter arenas
 app.get('/api/playfusion/arenas', async (req, res) => {
@@ -342,6 +307,211 @@ app.get('/api/playfusion/arenas', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+// Find Product by ID 
+app.get('/api/playfusion/product/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    // Fetch product by ID
+    const product = await Product.findById(productId);
+
+    // Check if product exists
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Respond with the product
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+//All Products
+app.get('/api/playfusion/allproduct', async (req, res) => {
+  try {
+    // Fetch all products
+    const allProduct = await Product.find({})
+
+    // Respond with all products
+    res.json(allProduct);
+  } catch (error) {
+    console.error('Error fetching all Arena:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// All Products minus delisted products
+app.get('/api/playfusion/allproductdelisted', async (req, res) => {
+  try {
+    // Fetch all products excluding delisted ones
+    const allProduct = await Product.find({ delist: { $ne: true } });
+
+    // Respond with filtered products
+    res.json(allProduct);
+  } catch (error) {
+    console.error('Error fetching all products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Endpoint for filtering products
+app.post('/api/playfusion/filterproduct', async (req, res) => {
+  try {
+  // Extract filter criteria from request body
+  const { condition, location, price } = req.body;
+
+  // Your database query logic here
+  let query = {}; // Initial query object
+
+  // If condition is provided, add it to the query
+  if (condition) {
+    query.condition = condition;
+  }
+
+  // If location is provided, add it to the query
+  if (location && location !== '') {
+    query.location = location;
+  }
+
+  // If price is provided and not empty, add it to the query
+  if (price !== undefined && price !== 0) {
+    query.price = { $lte: price};
+  }
+
+  // Perform the database query using the constructed query object
+  const filteredProducts = await Product.find(query);
+  // Once you have the filtered products, send the response
+  res.json({ message: 'Filtered products', filteredProducts });
+} catch (error) {
+  console.error('Error fetching all filtered products:', error);
+  res.status(500).json({ error: 'Internal Server Error' });
+}
+});
+
+
+
+//All Find Player
+app.get('/api/playfusion/allfindplayer', async (req, res) => {
+  try {
+    // Fetch all find players
+    const allFindPlayer = await Find.find({})
+
+    // Respond with all find players request
+    res.json(allFindPlayer);
+  } catch (error) {
+    console.error('Error fetching all Find Player in server:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//All Find Player to check if user is already send request or not
+app.get('/api/playfusion/allfindplayer/:id', async (req, res) => {
+  Id = req.params.id;
+  try {
+    // Fetch all find players
+    const selectedFind = await Find.find({
+      userId: Id
+    })
+
+    // Respond with all find players request
+    res.json(selectedFind);
+  } catch (error) {
+    console.error('Error fetching all Find Player in server:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//All Preference
+app.get('/api/playfusion/allpreference', async (req, res) => {
+  try {
+    // Fetch all preference
+    const allPreference = await Preference.find({})
+
+    // Respond with all user preference for find player
+    res.json(allPreference);
+  } catch (error) {
+    console.error('Error fetching all Preference in server:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//Selected Preference
+app.get('/api/playfusion/allpreference/:id', async (req, res) => {
+  Id = req.params.id;
+  try {
+    // Fetch all preference
+    const allPreference = await Preference.find({
+      userId: Id
+    })
+
+    // Respond with all user preference for find player
+    res.json(allPreference);
+  } catch (error) {
+    console.error('Error fetching all Preference in server:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//All Matched user for find player
+app.get('/api/playfusion/allmatchfind', async (req, res) => {
+  try {
+    // Fetch all preference
+    const allMatchFind = await Match.find({})
+
+    // Respond with all user preference for find player
+    res.json(allMatchFind);
+  } catch (error) {
+    console.error('Error fetching all match find in server:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//To give matches (matched user) for find player where user user preference is matched with find
+app.get('/api/playfusion/allmatchfind/:id', async (req, res) => {
+  const Id = req.params.id;
+
+  try {
+      // Find matched find player documents where the matchUserId array contains the given user ID
+      const topCricketArenas = await Match.find({
+        matchUserId: { $elemMatch: { $eq: Id } }
+      })
+      // Send the matched users as a response
+      res.json({ topCricketArenas });
+  } catch (error) {
+      // Handle errors
+      console.error('Error fetching matched find requests:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//To give matches  of matched user to original user who send the request
+app.get('/api/playfusion/allmatchuser/:id', async (req, res) => {
+  const Id = req.params.id;
+
+  try {
+      // Find matched find player documents where the UserId array contains the given user ID
+      const topCricketArenas = await Match.find({
+        userId: Id
+      })
+      // Send the matched users as a response
+      res.json({ topCricketArenas });
+  } catch (error) {
+      // Handle errors
+      console.error('Error fetching matched find requests:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 
 
 
