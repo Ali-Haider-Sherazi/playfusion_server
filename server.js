@@ -685,6 +685,86 @@ app.get('/api/playfusion/allmatchuser/:id', async (req, res) => {
 });
 
 
+// Fetch all pending bookings
+app.get('/api/playfusion/pendingBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="pending"
+    const pendingBookings = await BookingDetail.find({ status: 'pending' });
+
+    // Respond with the pending bookings
+    res.json(pendingBookings);
+  } catch (error) {
+    console.error('Error fetching pending bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch all active bookings
+app.get('/api/playfusion/activeBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="active"
+    const activeBookings = await BookingDetail.find({ status: 'active' });
+
+    // Respond with the active bookings
+    res.json(activeBookings);
+  } catch (error) {
+    console.error('Error fetching active bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// Fetch all active bookings
+app.get('/api/playfusion/rejectedBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="active"
+    const rejectedBookings = await BookingDetail.find({ status: 'rejected' });
+
+    // Respond with the active bookings
+    res.json(rejectedBookings);
+  } catch (error) {
+    console.error('Error fetching rejected bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Update booking status
+app.patch('/api/playfusion/setStatus/:bookingId', async (req, res) => {
+  try {
+    // Extract the status and booking ID from the request body
+    const { status } = req.body;
+    const { bookingId } = req.params;
+
+    // Check if the booking ID is a valid ObjectId
+    if (!ObjectId.isValid(bookingId)) {
+      return res.status(400).json({ error: 'Invalid booking ID' });
+    }
+
+    // Find the booking by ID and update its status
+    const updatedBooking = await BookingDetail.findByIdAndUpdate(
+      { _id: bookingId },
+      { status },
+      { new: true }
+    );
+ // If no booking is found with the provided ID, respond with a 404 status
+    if (!updatedBooking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    // Respond with the updated booking
+    res.status(200).json({
+      success: true,
+      message: 'Booking status updated successfully',
+      updatedBooking,
+    });
+  } catch (error) {
+    console.error('Error updating booking status:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+});
 
 
 
