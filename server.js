@@ -198,6 +198,8 @@ app.get('/api/playfusion/slots', async (req, res) => {
     const filter = {};
     if (arenaID) filter.arenaID = arenaID;
     if (date) filter.date = date;
+    // Add filter for status not equal to "rejected"
+    filter.status = { $ne: 'rejected' };
 
     // Fetching bookings based on the filter
     const bookings = await BookingDetail.find(filter);
@@ -214,6 +216,7 @@ app.get('/api/playfusion/slots', async (req, res) => {
     });
   }
 });
+
 //fetch those where status of slot is 1-booked 2-pending 
 // Route to fetch slots based on userID and status
 app.get('/api/playfusion/slots/:userID/:status', async (req, res) => {
@@ -354,7 +357,7 @@ app.patch('/api/playfusion/updateArena/:arenaId', async (req, res) => {
       updatedArena,
     });
   } catch (error) {
-    
+
     console.error('Error updating arena:', error);
     res.status(500).json({
       success: false,
