@@ -546,7 +546,7 @@ app.post('/api/playfusion/filterproduct', async (req, res) => {
   let query = {}; // Initial query object
 
   // If condition is provided, add it to the query
-  if (condition) {
+  if (condition && condition !== '') {
     query.condition = condition;
   }
 
