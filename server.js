@@ -7,6 +7,9 @@ const colors = require("colors");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 const bodyParser = require('body-parser');
+const cron = require('node-cron');
+const moment = require('moment');
+const fetch = require('node-fetch');
 // Import models
 const Arena = require("./models/arenaModel");
 const BookingDetail = require('./models/bookingModel');
@@ -36,6 +39,58 @@ app.use(morgan("dev"));
 
 //ROUTES
 app.use("/api/playfusion", require("./routes/arenaRoute"));
+
+
+
+
+// Update the function to handle the PATCH request
+async function updateArenaBookings(req, res) {
+  try {
+    // Fetch the arena bookings
+    const response = await fetch('https://playfusion-server.onrender.com/api/playfusion/activeBookings');
+    const bookings = await response.json();
+
+    // Get the current date
+    const currentDate = moment().format('YYYY-MM-DD');
+
+    // Loop through the bookings
+    for (const booking of bookings) {
+      if (booking.status === 'active') {
+        // Check if the booking date has passed
+        if (moment(booking.date, 'DD-MMM-YYYY').isBefore(currentDate)) {
+          // Update the booking status to 'completed'
+          await fetch(`https://playfusion-server.onrender.com/api/playfusion/setStatus/${booking._id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'completed' })
+          });
+          console.log(`Booking ${booking._id} completed.`);
+        }
+      }
+    }
+
+    console.log('Update completed.');
+    
+  } catch (error) {
+    console.error('Error updating arena bookings:', error);
+    
+  }
+}
+
+
+
+
+// Calculate the cron schedule for running after 1 minute from now
+var now = new Date();
+var minutes = now.getMinutes() + 1;
+var schedule = `${minutes} ${now.getHours()} ${now.getDate()} ${now.getMonth() + 1} *`;
+
+// Schedule the function to run after 1 minute
+cron.schedule('0 */1 * * *', () => {
+  console.log('Running updateArenaBookings...');
+  updateArenaBookings();
+});
+
 
 
 // Top 2 arenas based on reviews
@@ -449,6 +504,20 @@ app.post('/api/playfusion/addReview/:arenaId', async (req, res) => {
     res.status(201).json({ success: true, message: 'Review added successfully' });
   } catch (error) {
     console.error('Error adding review:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch all completed bookings
+app.get('/api/playfusion/completedBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="completed"
+    const completedBookings = await BookingDetail.find({ status: 'completed' });
+
+    // Respond with the completed bookings
+    res.json(completedBookings);
+  } catch (error) {
+    console.error('Error fetching completed bookings:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
