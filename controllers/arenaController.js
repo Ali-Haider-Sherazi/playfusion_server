@@ -16,7 +16,9 @@ const addArenaController = async (req, res) => {
       isActive,
       titleImage,
       images,
-      courts} = req.body;
+      courts,
+      paymentInfo
+    } = req.body;
     console.log("req.body is ",req.body);
     console.log(name);
 
@@ -86,8 +88,16 @@ const addArenaController = async (req, res) => {
       success: false,
       message: "Minimum amount of courts should be 1",
     });
+  
+  
 }
 
+else if  (!paymentInfo) {
+  return res.status(400).send({
+    success: false,
+    message: "Payment Info is required",
+  });
+}
 
     //save arena
     const arena = await arenaModel({
@@ -104,7 +114,8 @@ const addArenaController = async (req, res) => {
         isActive,
         titleImage,
         images,
-        courts
+        courts,
+        paymentInfo
     }).save();
 
     return res.status(201).send({

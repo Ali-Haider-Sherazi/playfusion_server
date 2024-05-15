@@ -16,6 +16,21 @@ const reviewSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+const paymentInfoSchema = new mongoose.Schema({
+  accountTitle: {
+    type: String,
+    required: [true, "Enter Account Title"],
+  },
+  accountNumber: {
+    type: String,
+    required: [true, "Enter Account Number"],
+  },
+  bankName: {
+    type: String,
+    required: [true, "Enter Bank Name"],
+  },
+});
+
 const arenaSchema = new mongoose.Schema(
   {
     titleImage: {
@@ -75,7 +90,11 @@ const arenaSchema = new mongoose.Schema(
     courts: {
       type: Number,
       required: [true, "Enter Number of Courts"],
-    }
+    },
+    paymentInfo: {
+      type: paymentInfoSchema,
+      required: [true, "Enter Payment Information"],
+    },
   },
   { timestamps: true }
  
