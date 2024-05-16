@@ -91,7 +91,29 @@ cron.schedule('0 */1 * * *', () => {
   updateArenaBookings();
 });
 
+// Schedule a task to run every 5 minutes
+cron.schedule('0 0 * * *', async () => {
+  try {
+    const now = new Date();
+    const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
 
+    // Find all pending bookings older than 48 hours
+    const outdatedPendingBookings = await BookingDetail.find({
+      status: 'pending',
+      createdAt: { $lt: fortyEightHoursAgo },
+    });
+
+    // Update their status to 'cancelled'
+    const updateResults = await BookingDetail.updateMany(
+      { _id: { $in: outdatedPendingBookings.map(booking => booking._id) } },
+      { $set: { status: 'rejected' } }
+    );
+
+    console.log(`Cancelled ${updateResults.modifiedCount} outdated pending bookings.`);
+  } catch (error) {
+    console.error('Error updating outdated pending bookings:', error);
+  }
+});
 
 // Top 2 arenas based on reviews
 app.get('/api/playfusion/topArenas', async (req, res) => {
