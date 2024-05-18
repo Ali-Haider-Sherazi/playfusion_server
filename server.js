@@ -630,11 +630,16 @@ app.get('/api/playfusion/allproductdelisted', async (req, res) => {
 // Endpoint for filtering products
 app.post('/api/playfusion/filterproduct', async (req, res) => {
   try {
+    console.log('Request Body:', req.body);
   // Extract filter criteria from request body
-  const { condition, location, price } = req.body;
+  const { condition, location, type, minPrice, maxPrice } = req.body;
 
   // Your database query logic here
   let query = {}; // Initial query object
+
+  if (type && type !== 'All') {
+    query.type = type;
+  }
 
   // If condition is provided, add it to the query
   if (condition && condition !== '') {
@@ -646,9 +651,9 @@ app.post('/api/playfusion/filterproduct', async (req, res) => {
     query.location = location;
   }
 
-  // If price is provided and not empty, add it to the query
-  if (price !== undefined && price !== 0) {
-    query.price = { $lte: price};
+  // Add price range to the query if both minPrice and maxPrice are provided
+  if (minPrice !== undefined && maxPrice !== undefined) {
+    query.price = { $gte: minPrice, $lte: maxPrice };
   }
 
   // Perform the database query using the constructed query object
