@@ -1,4 +1,5 @@
 const express = require("express");
+const { pendingArenaController } = require("../controllers/pendingArenaController");
 const { addArenaController } = require("../controllers/arenaController");
 const {updateArenaController} = require("../controllers/updateArenaController");
 const {bookingController} = require("../controllers/bookingController");
@@ -18,6 +19,7 @@ const router = express.Router();
 
 //routes
 // REGISTER || POST
+router.post("/addPendingArena", pendingArenaController);
 router.post("/addArena", addArenaController);
 router.post("/booking", bookingController);
 router.post("/addProduct", addProductController);

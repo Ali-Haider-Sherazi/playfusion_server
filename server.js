@@ -11,6 +11,7 @@ const cron = require('node-cron');
 const moment = require('moment');
 const fetch = require('node-fetch');
 // Import models
+const PendingArena = require("./models/pendingArenaModel");
 const Arena = require("./models/arenaModel");
 const BookingDetail = require('./models/bookingModel');
 const Product = require("./models/productModel");
@@ -473,6 +474,37 @@ app.patch('/api/playfusion/updateArenaImages/:arenaId', async (req, res) => {
     });
   }
 });
+
+// Update Pending Arena Images
+app.patch('/api/playfusion/updatePendingArenaImages/:arenaId', async (req, res) => {
+  try {
+    const { arenaId } = req.params;
+    let newid = arenaId;
+    newid = new ObjectId(newid);
+    const updatedData = req.body;
+
+    // Find the arena by ID and update it
+    const updatedArena = await PendingArena.findByIdAndUpdate({ _id: newid }, {titleImage: req.body.titleImage, images: req.body.images}, { new: true });
+
+    // If no arena is found with the provided ID, respond with a 404 status
+    if (!updatedArena) {
+      return res.status(404).json({ error: 'Pending Arena not found' });
+    }
+
+    // Respond with the updated arena
+    res.status(200).json({
+      success: true,
+      updatedArena,
+    });
+  } catch (error) {
+    console.error('Error updating pending arena images:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+});
+
 
 //Check Booking Status for Reviews
 app.get('/api/playfusion/checkBookingStatus/:arenaId/:userId', async (req, res) => {
