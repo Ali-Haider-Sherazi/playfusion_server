@@ -212,6 +212,20 @@ app.get('/api/playfusion/all', async (req, res) => {
   }
 });
 
+//Pending Arenas
+app.get('/api/playfusion/pendingArenas', async (req, res) => {
+  try {
+    // Fetch all arenas with "Gaming Zone" in the sports array
+    const allArena = await PendingArena.find({})
+
+    // Respond with all gaming zone arenas
+    res.json(allPendingArena);
+  } catch (error) {
+    console.error('Error fetching all  Pending Arenas:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 //Fetching single Arena Detail:
 app.get('/api/playfusion/all/:arenaID', async (req, res) => {
   try {
