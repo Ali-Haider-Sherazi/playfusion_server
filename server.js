@@ -219,7 +219,7 @@ app.get('/api/playfusion/pendingArenas', async (req, res) => {
     const allArena = await PendingArena.find({})
 
     // Respond with all gaming zone arenas
-    res.json(allPendingArena);
+    res.json(allArena);
   } catch (error) {
     console.error('Error fetching all  Pending Arenas:', error);
     res.status(500).json({ error: 'Internal Server Error' });
