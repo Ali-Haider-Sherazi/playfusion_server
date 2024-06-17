@@ -226,6 +226,41 @@ app.get('/api/playfusion/pendingArenas', async (req, res) => {
   }
 });
 
+// Define the deletePendingArena route
+app.delete('/api/playfusion/deletePendingArena/:arenaId', async (req, res) => {
+  const { arenaId } = req.params;
+
+  try {
+    const result = await Pending.findByIdAndDelete(arenaId);
+
+    if (!result) {
+      return res.status(404).send('Pending Arena not found');
+    }
+
+    res.send(`Arena with id ${arenaId} deleted successfully`);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+//Delete Specific Pending Arena
+app.delete('/api/playfusion/deletePendingArena/:arenaId', async (req, res) => {
+  const { arenaId } = req.params;
+
+  try {
+    const result = await PendingArena.findOneAndDelete({ _id: arenaId });
+
+    if (!result) {
+      return res.status(404).send('Pending Arena not found');
+    }
+
+    res.send(`Pending Arena with id ${arenaId} deleted successfully`);
+  } catch (error) {
+    console.error('Error deleting pending arena:', error); // Log the error for debugging
+    res.status(500).send('Internal Server Error'); // Provide a more informative error message
+  }
+});
+
 //Fetching single Arena Detail:
 app.get('/api/playfusion/all/:arenaID', async (req, res) => {
   try {
