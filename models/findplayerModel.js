@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const findSchema = new mongoose.Schema({
+    sport: {
+        type: String,
+        required: true,
+    },
     players: {
         type: Number,
         required: true,
