@@ -2,7 +2,7 @@ const findModel = require("../models/findplayerModel");
 //FindPlayer
 const findController = async (req, res) => {
     try {
-    const { players, arena, start, end, date, location, userId} = req.body;
+    const { sport, players, arena, start, end, date, location, userId} = req.body;
     console.log("req.body is ",req.body);
     console.log(arena);
 
@@ -49,10 +49,16 @@ const findController = async (req, res) => {
         message: "SellerId is required",
         });
     }
+    else if  (!sport) {
+        return res.status(400).send({
+        success: false,
+        message: "Sport is required",
+        });
+    }
 
     //save find player requirement
     const findPlayer = await findModel({
-        players, arena, start, end, date, location, userId
+        players, arena, start, end, date, location, userId, sport
     }).save();
 
     return res.status(201).send({
