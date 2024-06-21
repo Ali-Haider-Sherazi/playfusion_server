@@ -2,7 +2,7 @@ const matchModel = require("../models/matchFindModel");
 //Matched users for find player
 const matchFindController = async (req, res) => {
     try {
-    const { players, arena, start, end, date, location, userId, matchUserId, completeStatus, acceptedUserId} = req.body;
+    const { players, arena, start, end, date, location, userId, matchUserId, completeStatus, acceptedUserId, sport} = req.body;
     console.log("req.body is ",req.body);
     //console.log(arena);
 
@@ -67,10 +67,16 @@ const matchFindController = async (req, res) => {
         message: "Accepted User Id is required",
         });
     }
+    else if  (!sport) {
+        return res.status(400).send({
+        success: false,
+        message: "Sport is required",
+        });
+    }
 
     //save find player requirement
     const matchFind = await matchModel({
-        players, arena, start, end, date, location, userId, matchUserId, completeStatus, acceptedUserId
+        players, arena, start, end, date, location, userId, matchUserId, completeStatus, acceptedUserId, sport
     }).save();
 
     return res.status(201).send({
