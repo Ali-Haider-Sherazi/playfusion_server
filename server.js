@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const cron = require('node-cron');
 const moment = require('moment');
 const fetch = require('node-fetch');
+const axios = require('axios');
 // Import models
 const PendingArena = require("./models/pendingArenaModel");
 const Arena = require("./models/arenaModel");
@@ -925,6 +926,38 @@ app.patch('/api/playfusion/setStatus/:bookingId', async (req, res) => {
     });
   }
 });
+
+//Push Notification for find player
+app.post('/api/playfusion/notifications', async (req, res) => {
+  const { token, title, body, data } = req.body;
+
+  try {
+    const message = {
+      to: token,
+      sound: 'default',
+      title: title || 'Notification',
+      body: body || 'You have a new notification.',
+      data: data || {},
+    };
+
+    const response = await axios.post('https://exp.host/--/api/v2/push/send', message, {
+      headers: {
+        'Accept': 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Expo push notification response:', response.data);
+
+    res.status(200).send('Notification sent successfully');
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+    res.status(500).send('Error sending push notification');
+  }
+});
+
+
 
 
 
