@@ -637,6 +637,19 @@ app.get('/api/playfusion/activeBookings', async (req, res) => {
   }
 });
 
+// Fetch all active bookings
+app.get('/api/playfusion/cancelBookings', async (req, res) => {
+  try {
+    // Fetch all bookings with status="active"
+    const activeBookings = await BookingDetail.find({ status: 'cancelled' });
+
+    // Respond with the active bookings
+    res.json(cancelledByUserBookings);
+  } catch (error) {
+    console.error('Error fetching user cancelled bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 
