@@ -641,7 +641,7 @@ app.get('/api/playfusion/activeBookings', async (req, res) => {
 app.get('/api/playfusion/cancelBookings', async (req, res) => {
   try {
     // Fetch all bookings with status="active"
-    const activeBookings = await BookingDetail.find({ status: 'cancelled' });
+    const cancelledByUserBookings = await BookingDetail.find({ status: 'cancelled' });
 
     // Respond with the active bookings
     res.json(cancelledByUserBookings);
