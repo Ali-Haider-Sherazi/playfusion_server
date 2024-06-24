@@ -2,7 +2,7 @@ const bookingModel = require("../models/bookingModel");
 //addArena
 const bookingController = async (req, res) => {
   try {
-    const { arenaID, userID, date, slots, price, status,image } = req.body;
+    const { arenaID, userID, date, slots, price, status,image,isGame } = req.body;
     console.log("req.body is ", req.body);
     //console.log(name);
 
@@ -52,7 +52,7 @@ const bookingController = async (req, res) => {
     
     //save user
     const booking = await bookingModel({
-      arenaID, userID, date, slots,price,status,image
+      arenaID, userID, date, slots,price,status,image,isGame
     }).save();
 
     return res.status(201).send({
