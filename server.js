@@ -310,7 +310,8 @@ app.get('/api/playfusion/slots', async (req, res) => {
     if (arenaID) filter.arenaID = arenaID;
     if (date) filter.date = date;
     // Add filter for status not equal to "rejected"
-    filter.status = { $ne: 'rejected' };
+      filter.status = { $nin: ['rejected', 'cancelled'] };
+
 
     // Fetching bookings based on the filter
     const bookings = await BookingDetail.find(filter);
