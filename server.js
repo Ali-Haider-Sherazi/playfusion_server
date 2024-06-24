@@ -124,7 +124,7 @@ app.get('/api/playfusion/topArenas', async (req, res) => {
     const topTwoArenas = await Arena.find({ isActive: true })
       .sort({ review: -1 }) // Sort in descending order based on review
       .limit(2); // Limit to the top 2 results
-
+    console.log('Fetched top two active arenas:', topTwoArenas);
     // Respond with the top two active arenas
     res.json(topTwoArenas);
   } catch (error) {
