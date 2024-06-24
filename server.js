@@ -121,7 +121,7 @@ cron.schedule('0 0 * * *', async () => {
 app.get('/api/playfusion/topArenas', async (req, res) => {
   try {
     // Fetch the top 2 active arenas based on reviews
-    const topTwoArenas = await Arena.find({ isActive: { $ne: false } })
+    const topTwoArenas = await Arena.find({})
       .sort({ review: -1 }) // Sort in descending order based on review
       .limit(2); // Limit to the top 2 results
     console.log('Fetched top two active arenas:', topTwoArenas);
