@@ -227,6 +227,40 @@ app.get('/api/playfusion/pendingArenas', async (req, res) => {
   }
 });
 
+//Check Arena Active Bookings
+app.get('/api/playfusion/checkActiveBookings/:arenaId', async (req, res) => {
+  const { arenaId } = req.params;
+
+  try {
+    // Fetch all bookings with status="active" and arenaId matching the provided arenaId
+    const activeBookings = await BookingDetail.find({ status: 'active', arenaID: arenaId });
+
+    // Respond with the active bookings or an empty array if none are found
+    res.json(activeBookings);
+  } catch (error) {
+    console.error('Error fetching active bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//Delete Specific Arena
+app.delete('/api/playfusion/deleteArena/:arenaId', async (req, res) => {
+  const { arenaId } = req.params;
+
+  try {
+    const result = await Arena.findOneAndDelete({ _id: arenaId });
+
+    if (!result) {
+      return res.status(404).send('Arena not found');
+    }
+
+    res.send(`Arena with id ${arenaId} deleted successfully`);
+  } catch (error) {
+    console.error('Error deleting arena:', error); // Log the error for debugging
+    res.status(500).send('Internal Server Error'); // Provide a more informative error message
+  }
+});
+
 //Delete Specific Pending Arena
 app.delete('/api/playfusion/deletePendingArena/:arenaId', async (req, res) => {
   const { arenaId } = req.params;
