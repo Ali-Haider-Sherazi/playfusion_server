@@ -35,6 +35,12 @@ const bookingSchema = new mongoose.Schema(
       required: [true, "Image is empty. try again"],
        
     },
+    isGame:{
+      type: Boolean,
+      required: [true, "Book one is Game or not is required. try again"],
+
+    }
+
     
   },
   { timestamps: true }
