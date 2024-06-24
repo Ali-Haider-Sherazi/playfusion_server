@@ -120,18 +120,19 @@ cron.schedule('0 0 * * *', async () => {
 // Top 2 arenas based on reviews
 app.get('/api/playfusion/topArenas', async (req, res) => {
   try {
-    // Fetch the top 2 arenas based on reviews
-    const topTwoArenas = await Arena.find({})
+    // Fetch the top 2 active arenas based on reviews
+    const topTwoArenas = await Arena.find({ isActive: true })
       .sort({ review: -1 }) // Sort in descending order based on review
       .limit(2); // Limit to the top 2 results
 
-    // Respond with the top two arenas
+    // Respond with the top two active arenas
     res.json(topTwoArenas);
   } catch (error) {
     console.error('Error fetching top arenas:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 //Top Two Cricket
 app.get('/api/playfusion/topCricketArenas', async (req, res) => {
