@@ -139,6 +139,7 @@ app.get('/api/playfusion/topCricketArenas', async (req, res) => {
   try {
     // Fetch the top 2 arenas with "Cricket" in the sports array
     const topCricketArenas = await Arena.find({
+      isActive: true,
       sports: { $elemMatch: { $eq: "Cricket" } }
     })
       .sort({ review: -1 }) // Sort in descending order based on review
