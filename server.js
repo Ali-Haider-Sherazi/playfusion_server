@@ -158,6 +158,7 @@ app.get('/api/playfusion/Cricket', async (req, res) => {
   try {
     // Fetch the top 2 arenas with "Cricket" in the sports array
     const cricket = await Arena.find({
+      isActive: true,
       sports: { $elemMatch: { $eq: "Cricket" } }
     })
 
@@ -174,6 +175,7 @@ app.get('/api/playfusion/Futsal', async (req, res) => {
   try {
     // Fetch the top 2 arenas with "Cricket" in the sports array
     const Futsal = await Arena.find({
+      isActive: true,
       sports: { $elemMatch: { $eq: "Futsal" } }
     })
 
@@ -190,6 +192,7 @@ app.get('/api/playfusion/Gaming', async (req, res) => {
   try {
     // Fetch the top 2 arenas with "Cricket" in the sports array
     const Futsal = await Arena.find({
+      isActive: true,
       sports: { $elemMatch: { $eq: "Gaming Zone" } }
     })
 
