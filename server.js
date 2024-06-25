@@ -403,7 +403,7 @@ app.get('/api/playfusion/slots/:userID/:status', async (req, res) => {
 // Endpoint to filter arenas
 app.get('/api/playfusion/arenas', async (req, res) => {
   try {
-    let query = {};
+let query = { isActive: true }; // Initialize query with isActive true
 
    if (req.query.sportType && req.query.sportType !== 'all') {
       query.sports = req.query.sportType;
@@ -422,7 +422,7 @@ app.get('/api/playfusion/arenas', async (req, res) => {
 
     app.get('/api/playfusion/arenas', async (req, res) => {
   try {
-    let query = {};
+let query = { isActive: true }; // Initialize query with isActive true
 
     // Filter by sportType
     if (req.query.sportType) {
