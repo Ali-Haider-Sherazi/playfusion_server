@@ -204,7 +204,7 @@ app.get('/api/playfusion/Gaming', async (req, res) => {
 app.get('/api/playfusion/all', async (req, res) => {
   try {
     // Fetch all arenas with "Gaming Zone" in the sports array
-    const allArena = await Arena.find({})
+    const allArena = await Arena.find({ isActive: true });
 
     // Respond with all gaming zone arenas
     res.json(allArena);
